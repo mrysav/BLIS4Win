@@ -4,13 +4,17 @@
     Unlike `basic_d`, this example uses layout to position the controls in the window
 */
 
-
-extern crate native_windows_gui as nwg;
 extern crate native_windows_derive as nwd;
+extern crate native_windows_gui as nwg;
 
 use nwd::NwgUi;
 use nwg::NativeUi;
 
+use std::{thread, time::Duration};
+
+pub mod process;
+use process::child_stream_to_vec;
+use process::php::PhpFpm;
 
 #[derive(Default, NwgUi)]
 pub struct BasicApp {
@@ -20,7 +24,6 @@ pub struct BasicApp {
 
     #[nwg_layout(parent: window, spacing: 1)]
     grid: nwg::GridLayout,
-
     // #[nwg_control(text: "Heisenberg", focus: true)]
     // #[nwg_layout_item(layout: grid, row: 0, col: 0)]
     // name_edit: nwg::TextInput,
@@ -32,7 +35,6 @@ pub struct BasicApp {
 }
 
 impl BasicApp {
-
     fn say_hello(&self) {
         // nwg::modal_info_message(&self.window, "Hello", &format!("Hello {}", self.name_edit.text()));
     }
@@ -41,10 +43,18 @@ impl BasicApp {
         nwg::modal_info_message(&self.window, "Goodbye", &format!("Goodbye {}", "Moon"));
         nwg::stop_thread_dispatch();
     }
-
 }
 
 fn main() {
+    let mut php = PhpFpm::spawn();
+
+    // let stdout = child_stream_to_vec(php.proc.stdout.take().expect("!stdout"));
+    // println!("{}", stdout);
+
+    thread::sleep(Duration::from_millis(5000));
+
+    php.stop();
+
     nwg::init().expect("Failed to init Native Windows GUI");
     nwg::Font::set_global_family("Segoe UI").expect("Failed to set default font");
     let _app = BasicApp::build_ui(Default::default()).expect("Failed to build UI");
