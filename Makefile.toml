@@ -10,7 +10,6 @@ args = ["clean"]
 [tasks.build]
 command = "cargo"
 args = ["build", "--target=x86_64-pc-windows-gnu"]
-dependencies = ["clean"]
 
 [tasks.run]
 command = "wine"

@@ -1,0 +1,12 @@
+{
+    http_port 8080
+    https_port 8443
+}
+
+http://localhost:8080 {
+	root * .
+	encode gzip
+	php_fastcgi 127.0.0.1:8112
+	file_server
+}
+

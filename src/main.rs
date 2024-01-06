@@ -10,11 +10,12 @@ extern crate native_windows_gui as nwg;
 use nwd::NwgUi;
 use nwg::NativeUi;
 
+use handlebars::Handlebars;
+
 use std::{thread, time::Duration};
 
 pub mod process;
-use process::child_stream_to_vec;
-use process::php::PhpFpm;
+use process::{php::PhpFpm, caddy::Caddy};
 
 #[derive(Default, NwgUi)]
 pub struct BasicApp {
@@ -46,17 +47,26 @@ impl BasicApp {
 }
 
 fn main() {
-    let mut php = PhpFpm::spawn();
+    let mut handlebars = Handlebars::new();
+    handlebars
+        .register_template_file("php.ini", "config/php.ini.hbs")
+        .expect("Could not load php.ini.hbs");
+
+    handlebars.set_strict_mode(true);
+
+    let mut php = PhpFpm::spawn(handlebars);
+    let mut caddy = Caddy::spawn();
 
     // let stdout = child_stream_to_vec(php.proc.stdout.take().expect("!stdout"));
     // println!("{}", stdout);
 
     thread::sleep(Duration::from_millis(5000));
 
+    caddy.stop();
     php.stop();
 
-    nwg::init().expect("Failed to init Native Windows GUI");
-    nwg::Font::set_global_family("Segoe UI").expect("Failed to set default font");
-    let _app = BasicApp::build_ui(Default::default()).expect("Failed to build UI");
-    nwg::dispatch_thread_events();
+    // nwg::init().expect("Failed to init Native Windows GUI");
+    // nwg::Font::set_global_family("Segoe UI").expect("Failed to set default font");
+    // let _app = BasicApp::build_ui(Default::default()).expect("Failed to build UI");
+    // nwg::dispatch_thread_events();
 }
