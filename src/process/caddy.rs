@@ -1,35 +1,26 @@
 extern crate create_process_w as CreateProcessW;
 
-use std::{env::current_exe, path::PathBuf};
+use std::path::PathBuf;
 use CreateProcessW::Command;
+use super::util::Util;
 
 pub struct Caddy {
-    pub proc: CreateProcessW::Child,
+    proc: Option<CreateProcessW::Child>,
+    exe_path: String,
+    cfg_path: String,
+    host: String,
+    port: i32,
 }
 
 impl Caddy {
-    fn curdir() -> Result<PathBuf, &'static str> {
-        let mut dir = current_exe().unwrap();
-
-        while dir.pop() {
-            let cfg_pb = dir.join("config");
-            if cfg_pb.as_path().exists() {
-                // config dir exists, this is the path we want
-                return Ok(dir);
-            }
-        }
-
-        return Err("Could not find 'config' directory.");
-    }
-
     fn caddydir() -> Result<PathBuf, &'static str> {
-        let curdir = Caddy::curdir()?;
+        let curdir = Util::root_directory()?;
         let caddy = curdir.join("bin/caddy");
         return Ok(caddy);
     }
 
-    pub fn spawn() -> Caddy {
-        let curdir = Caddy::curdir().unwrap();
+    pub fn new() -> Caddy {
+        let curdir = Util::root_directory().unwrap();
         let caddy_dir = Caddy::caddydir().unwrap();
 
         let exe = caddy_dir.join("caddy_windows_amd64.exe");
@@ -41,16 +32,37 @@ impl Caddy {
         let _log_dir = curdir.join("log");
         let _slog_dir = _log_dir.to_str().unwrap();
 
-        let proc = Command::new(format!("{} run --config {}", sexe, scfg))
+        Caddy {
+            proc: None,
+            exe_path: String::from(sexe),
+            cfg_path: String::from(scfg),
+            // TODO: make these configurable
+            host: String::from(""),
+            port: 0,
+        }
+    }
+
+    pub fn spawn(&mut self) {
+        if self.proc.is_some() {
+            return;
+        }
+
+        let proc = Command::new(format!("{} run --config \"{}\" ", self.exe_path.as_str(), self.cfg_path.as_str()))
             .spawn()
             .expect("Failed to launch Caddy.");
 
-        Caddy { proc: proc }
+        self.proc = Some(proc);
     }
 
-    pub fn stop(&mut self) {
-        self.proc.kill().expect("Caddy could not be killed.");
-        let status = self.proc.wait().expect("waiting for Caddy to die failed");
+    pub fn stop(&self) {
+        if self.proc.is_none() {
+            return;
+        }
+
+        let proc = self.proc.as_ref().unwrap();
+
+        proc.kill().expect("Caddy could not be killed.");
+        let status = proc.wait().expect("waiting for Caddy to die failed");
         if status.success() {
             println!("Caddy was stopped.");
         } else {
