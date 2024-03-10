@@ -3,25 +3,26 @@
     Unlike `basic_d`, this example uses layout to position the controls in the window
 */
 
+use gtk::glib::ExitCode;
 use gtk::prelude::*;
 use gtk::{glib, Application, ApplicationWindow};
 use handlebars::Handlebars;
-use std::{cell::RefCell, borrow::Borrow, thread::sleep, time::Duration};
-use std::ops::Deref;
-use std::rc::Rc;
+use webbrowser;
 
 pub mod process;
 use process::{
     caddy::{self},
+    mysqld::{self},
     php::{self},
 };
 
-const APP_ID: &'static str = "org.gtk_rs.HelloWorld2";
+const APP_ID: &'static str = "edu.gatech.cc.blis";
 const BLIS_VERSION: &'static str = "4.0";
 
 pub struct BlisApp {
-    php: php::PhpFpm,
     caddy: caddy::Caddy,
+    mysqld: mysqld::Mysqld,
+    php: php::PhpFpm,
 }
 
 impl BlisApp {
@@ -37,18 +38,20 @@ impl BlisApp {
         BlisApp {
             php: php::PhpFpm::new(handlebars),
             caddy: caddy::Caddy::new(),
+            mysqld: mysqld::Mysqld::new(),
         }
     }
 
     pub fn start(&mut self) {
+        self.mysqld.spawn();
         self.php.spawn();
-        sleep(Duration::new(1, 0));
         self.caddy.spawn();
     }
 
     pub fn stop(&self) {
         self.caddy.stop();
         self.php.stop();
+        self.mysqld.stop();
     }
 }
 
@@ -62,8 +65,20 @@ fn main() -> glib::ExitCode {
 
     appsvc.start();
 
+    if webbrowser::open("http://localhost:8080/").is_err() {
+        println!("Couldn't open a browser");
+    }
+
     // Run the application
-    app.run()
+    let code = app.run();
+
+    if code != ExitCode::SUCCESS {
+        println!("There's a problem boss!");
+    }
+
+    appsvc.stop();
+
+    return code;
 }
 
 fn build_ui(app: &Application) {
@@ -75,8 +90,4 @@ fn build_ui(app: &Application) {
 
     // Present window
     window.present();
-}
-
-fn teardown(app: &Application) {
-    // TODO
 }
