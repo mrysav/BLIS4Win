@@ -9,6 +9,7 @@ pub struct Mysqld {
     // Inner process of Mysqld, once it is spawned
     proc: Option<CreateProcessW::Child>,
     exe_path: String,
+    datadir: String,
     host: String,
     port: i32,
 }
@@ -24,6 +25,7 @@ impl Mysqld {
         let curdir = Util::root_directory().unwrap();
         let mysqld_dir = Mysqld::mysqldir().unwrap();
         let exe = mysqld_dir.join("bin\\mysqld.exe");
+        let datadir = mysqld_dir.join("data");
 
         // unused right now...
         let host = String::from("127.0.0.1");
@@ -32,6 +34,7 @@ impl Mysqld {
         Mysqld {
             proc: None,
             exe_path: String::from(exe.to_str().unwrap()),
+            datadir: String::from(datadir.to_str().unwrap()),
             // TODO: make these configurable
             host: String::from("127.0.0.1"),
             port: 8112,
@@ -43,9 +46,12 @@ impl Mysqld {
             return;
         }
 
-        let proc = Command::new(format!("{} --console", self.exe_path))
-            .spawn()
-            .expect("Failed to launch Mysqld.");
+        let proc = Command::new(format!(
+            "{} --console --datadir \"{}\"",
+            self.exe_path, self.datadir
+        ))
+        .spawn()
+        .expect("Failed to launch Mysqld.");
 
         self.proc = Some(proc);
     }
@@ -56,7 +62,15 @@ impl Mysqld {
         }
 
         let proc = self.proc.as_ref().unwrap();
-        proc.kill().expect("Mysqld could not be killed.");
+
+        match proc.kill() {
+            Ok(_p) => {}
+            Err(error) => {
+                println!("Failed killing mysqld; might already be dead");
+                return;
+            }
+        }
+
         let status = proc.wait().expect("waiting for mysqld to die failed");
         if status.success() {
             println!("Mysqld was stopped.");

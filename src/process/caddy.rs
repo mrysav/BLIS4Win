@@ -61,8 +61,15 @@ impl Caddy {
 
         let proc = self.proc.as_ref().unwrap();
 
-        proc.kill().expect("Caddy could not be killed.");
-        let status = proc.wait().expect("waiting for Caddy to die failed");
+        match proc.kill() {
+            Ok(_p) => {}
+            Err(error) => {
+                println!("Failed killing Caddy; might already be dead");
+                return;
+            }
+        }
+
+        let status = proc.wait().unwrap();
         if status.success() {
             println!("Caddy was stopped.");
         } else {

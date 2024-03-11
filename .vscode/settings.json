@@ -2,5 +2,6 @@
     "rust-analyzer.linkedProjects": [
         "./Cargo.toml",
     ],
-    "php.validate.executablePath": "bin\\php-5.6.9-Win32-VC11-x64\\php.exe"
+    "php.validate.executablePath": "bin\\php-5.6.9-Win32-VC11-x64\\php.exe",
+    "caddyfile.executable": "bin/caddy/caddy_windows_amd64.exe"
 }

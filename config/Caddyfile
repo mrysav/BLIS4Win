@@ -4,9 +4,257 @@
 }
 
 http://localhost:8080 {
-	root * .
+	root * ./blis/htdocs/
 	encode gzip
 	php_fastcgi 127.0.0.1:8112
 	file_server
+
+    rewrite /lang_update.php Language/lang_update.php
+
+    ## /config folder
+    rewrite /lab_configs.php config/lab_configs.php
+    rewrite /lab_config_home.php config/lab_config_home.php
+    rewrite /grouped_report_config.php config/grouped_report_config.php
+    rewrite /lab_config_new.php config/lab_config_new.php
+    rewrite /lab_config_add.php config/lab_config_add.php
+    rewrite /lab_config_addd.php config/lab_config_addd.php
+    rewrite /lab_config_added.php config/lab_config_added.php
+    rewrite /lab_config_status.php config/lab_config_status.php
+    rewrite /cfield_new.php config/cfield_new.php
+    rewrite /cfield_edit.php config/cfield_edit.php
+    rewrite /worksheet_custom_new.php config/worksheet_custom_new.php
+    rewrite /worksheet_custom_add.php config/worksheet_custom_add.php
+    rewrite /worksheet_custom_added.php config/worksheet_custom_added.php
+    rewrite /worksheet_custom_edit.php config/worksheet_custom_edit.php
+    rewrite /worksheet_custom_update.php config/worksheet_custom_update.php
+    rewrite /worksheet_custom_updated.php config/worksheet_custom_updated.php
+
+
+    ## /reports folder
+    rewrite /reports.php reports/reports.php
+    rewrite /report_onetesthistory.php reports/report_onetesthistory.php
+    rewrite /report_selected_tests.php reports/report_selected_tests.php
+    rewrite /remove_selected_tests.php reports/remove_selected_tests.php
+    rewrite /retrieve_specimens.php reports/retrieve_specimens.php
+    rewrite /reports_testhistory.php reports/reports_testhistory.php
+    rewrite /viz_test_history.php reports/viz_test_history.php
+    rewrite /reports_user_stats_individual.php reports/reports_user_stats_individual.php
+    rewrite /reports_user_stats_all.php reports/reports_user_stats_all.php
+    rewrite /reports_specimen.php reports/reports_specimen.php
+    rewrite /reports_specimenlog.php reports/reports_specimenlog.php
+    rewrite /reports_print.php reports/reports_print.php
+    rewrite /reports_dailyspecimens.php reports/reports_dailyspecimens.php
+    rewrite /reports_dailypatients.php reports/reports_dailypatients.php
+    rewrite /reports_dailypatientBarcodes.php reports/reports_dailypatientBarcodes.php
+    rewrite /reports_infection.php reports/reports_infection.php
+    rewrite /doctor_stats.php reports/doctor_stats.php
+    rewrite /reports_specimencount.php reports/reports_specimencount.php
+    rewrite /reports_tests_done.php reports/reports_tests_done.php
+    rewrite /reports_test_range_stats.php reports/reports_test_range_stats.php
+    rewrite /reports_testcount_grouped.php reports/reports_testcount_grouped.php
+    rewrite /reports_specimencount_grouped.php reports/reports_specimencount_grouped.php
+    rewrite /reports_tat.php reports/reports_tat.php
+    rewrite /report_disease.php reports/report_disease.php
+    rewrite /infection_aggregate.php reports/infection_aggregate.php
+    rewrite /report_disease_preview.php reports/report_disease_preview.php
+    rewrite /reports_pending.php reports/reports_pending.php
+    rewrite /reports_userlog.php reports/reports_userlog.php
+    rewrite /reports_test.php reports/reports_test.php
+    rewrite /reports_patient.php reports/reports_patient.php
+    rewrite /report_prevalence_agg.php reports/report_prevalence_agg.php
+    rewrite /reports_tat_aggregate.php reports/reports_tat_aggregate.php
+    rewrite /reports_billing.php reports/reports_billing.php
+    rewrite /reports_billing_specific.php reports/reports_billing_specific.php
+    rewrite /specimen_aggregate_report.php reports/specimen_aggregate_report.php
+    rewrite /tests_aggregate_report.php reports/tests_aggregate_report.php
+    #-Currently unused php report files-
+    rewrite /reports_session.php reports/reports_session.php
+    rewrite /reports_tat_org.php reports/reports_tat_org.php
+    rewrite /geo_report_dir_prev_cameroon.php reports/geo_report_dir_prev_cameroon.php
+    rewrite /geo_report_dir_tat_cameroon.php reports/geo_report_dir_tat_cameroon.php
+    rewrite /geo_report_dir_prev_ghana.php reports/geo_report_dir_prev_ghana.php
+    rewrite /geo_report_dir_tat_ghana.php reports/geo_report_dir_tat_ghana.php
+    rewrite /geo_report_dir_prev_drc.php reports/geo_report_dir_prev_drc.php
+    rewrite /geo_report_dir_tat_drc.php reports/geo_report_dir_tat_drc.php
+    rewrite /geo_report_dir_prev_uganda.php reports/geo_report_dir_prev_uganda.php
+    rewrite /geo_report_dir_tat_uganda.php reports/geo_report_dir_tat_uganda.php
+    rewrite /geo_report_dir_prev_tanzania.php reports/geo_report_dir_prev_tanzania.php
+    rewrite /geo_report_dir_tat_tanzania.php reports/geo_report_dir_tat_tanzania.php
+    rewrite /geo_report_dir_prev.php reports/geo_report_dir_prev.php
+    rewrite /geo_report_dir_tat.php reports/geo_report_dir_tat.php
+
+    ## /catalog folder
+    rewrite /catalog.php catalog/catalog.php
+    rewrite /specimen_type_new.php catalog/specimen_type_new.php
+    rewrite /specimen_type_add.php catalog/specimen_type_add.php
+    rewrite /specimen_type_added.php catalog/specimen_type_added.php
+    rewrite /specimen_type_edit.php catalog/specimen_type_edit.php
+    rewrite /specimen_type_updated.php catalog/specimen_type_updated.php
+    rewrite /specimen_type_delete.php catalog/specimen_type_delete.php
+    rewrite /test_type_new.php catalog/test_type_new.php
+    rewrite /test_type_add.php catalog/test_type_add.php
+    rewrite /test_type_added.php catalog/test_type_added.php
+    rewrite /test_type_edit.php catalog/test_type_edit.php
+    rewrite /test_type_updated.php catalog/test_type_updated.php
+    rewrite /test_type_delete.php catalog/test_type_delete.php
+    rewrite /country_catalog.php catalog/country_catalog.php
+    rewrite /test_type_edit_agg.php catalog/test_type_edit_agg.php
+    rewrite /test_type_edit_dir.php catalog/test_type_edit_dir.php
+    rewrite /lab_section_edit_dir.php catalog/lab_section_edit_dir.php
+    rewrite /test_type_updated_agg.php catalog/test_type_updated_agg.php
+
+
+    ## /regn folder
+    rewrite /doctor_register.php regn/doctor_register.php
+    rewrite /doctor_add_patient.php regn/doctor_add_patient.php
+    rewrite /find_patient.php regn/find_patient.php
+    rewrite /new_patient.php regn/new_patient.php
+    rewrite /new_specimen.php regn/new_specimen.php
+    rewrite /specimen_added.php regn/specimen_added.php
+    rewrite /session_print.php regn/session_print.php
+
+
+    ## /results folder
+    rewrite /results_entry.php results/results_entry.php
+    rewrite /related_tests_results_entry.php results/related_tests_results_entry.php
+    rewrite /results_batch_add.php results/results_batch_add.php
+    rewrite /results_verify.php results/results_verify.php
+    rewrite /worksheet.php results/worksheet.php
+    rewrite /worksheet_custom.php results/worksheet_custom.php
+
+
+    ## /search folder
+    rewrite /search.php search/search.php
+    rewrite /patient_profile.php search/patient_profile.php
+    rewrite /select_test_profile.php search/select_test_profile.php
+    rewrite /specimen_info.php search/specimen_info.php
+    rewrite /specimen_verify.php search/specimen_verify.php
+    rewrite /specimen_verify_do.php search/specimen_verify_do.php
+    rewrite /specimen_result.php search/specimen_result.php
+    rewrite /specimen_result_do.php search/specimen_result_do.php
+    rewrite /viewPatientInfo.php search/viewPatientInfo.php
+
+
+    ## /export folder
+    rewrite /export_word.php export/export_word.php
+    rewrite /export_word_aggregate.php export/export_word_aggregate.php
+    rewrite /export_txt.php export/export_txt.php
+    rewrite /export_pdf.php export/export_pdf.php
+    rewrite /data_backup_revert.php export/data_backup_revert.php
+    rewrite /update_database.php export/update_database.php
+    rewrite /export_config export/export_config.php
+    rewrite /exportLabConfiguration.php export/exportLabConfiguration.php
+    rewrite /updateCountryDatabase.php export/updateCountryDatabase.php
+    rewrite /updateNationalDatabaseUI.php export/updateNationalDatabaseUI.php
+    rewrite /exportNationalDatabaseUI.php export/exportNationalDatabaseUI.php
+    rewrite /backupData.php export/backupData.php
+    rewrite /backupDataUI.php export/backupDataUI.php
+    rewrite /lab_backups.php export/lab_backups.php
+    rewrite /export/backups/*.zip export/get_file.php?f=backups/$1
+    rewrite /export_to_excel.php export/export_to_excel.php
+    rewrite /export_to_excel_get_test_types.php export/export_to_excel_get_test_types.php
+
+
+    ## /users folder
+    rewrite /edit_profile.php users/edit_profile.php
+    rewrite /change_profile.php users/change_profile.php
+    rewrite /change_pwd.php users/change_pwd.php
+    rewrite /password_reset.php users/password_reset.php
+    rewrite /oneTime_password_reset.php users/oneTime_password_reset.php
+    rewrite /lab_admins.php users/lab_admins.php
+    rewrite /lab_admin_new.php users/lab_admin_new.php
+    rewrite /lab_admin_edit.php users/lab_admin_edit.php
+    rewrite /lab_user_new.php users/lab_user_new.php
+    rewrite /lab_user_edit.php users/lab_user_edit.php
+    rewrite /lab_user_type_new.php users/lab_user_type_new.php
+    rewrite /lab_user_type_edit.php users/lab_user_type_edit.php
+    rewrite /switchto_admin.php users/switchto_admin.php
+    rewrite /switchto_tech.php users/switchto_tech.php
+    rewrite /login.php users/login.php
+    rewrite /validate.php users/validate.php
+    rewrite /logout.php users/logout.php
+    rewrite /home.php users/home.php
+    rewrite /accesslist.php users/accesslist.php
+
+    rewrite /passwordReset.php users/passwordReset.php
+
+
+    ## /feedback folder
+    rewrite /comments.php feedback/comments.php
+    rewrite /latency_table.php feedback/latency_table.php
+    rewrite /login_table.php feedback/login_table.php
+    rewrite /record.js feedback/record.js
+    rewrite /blank.txt feedback/blank.txt
+    rewrite /Latency.php feedback/Latency.php
+    rewrite /UserProps.php feedback/UserProps.php
+    rewrite /user_rating.php feedback/user_rating.php
+    rewrite /user_rating_submit.php feedback/user_rating_submit.php
+
+
+    ## /help folder
+    rewrite /help.php feedback/help.php
+
+
+    ## /lang folder
+    rewrite /lang_switch lang/lang_switch.php
+    rewrite /stock_add.php lang/stock_add.php
+    rewrite /stock_details.php lang/stock_details.php
+    rewrite /stock_edit.php lang/stock_edit.php
+    rewrite /stock_edit_details.php lang/stock_edit_details.php
+    rewrite /stock_update.php lang/stock_update.php
+    rewrite /lang_edit lang/lang_edit.php
+    rewrite /lang_update lang/lang_update.php
+    rewrite /lang_catalog_update lang/lang_catalog_update.php
+    rewrite /lang_xml2php lang/lang_xml2php.php
+    rewrite /remarks_edit.php lang/remarks_edit.php
+    rewrite /stock_management lang/stock_management.php
+    rewrite /remarks_update.php lang/remarks_update.php
+    rewrite /current_inventory.php lang/current_inventory.php
+    rewrite /stock_out.php lang/stock_out.php
+
+    ## /update folder
+    rewrite /update.php update/update.php
+    rewrite /updateCountryDbAtLocalUI.php update/updateCountryDbAtLocalUI.php
+    rewrite /updateCountryDbAtLocal.php update/updateCountryDbAtLocal.php
+
+    ## /debug folder
+    rewrite /testsuite_backend debug/testsuite_backend.php
+
+    ## /inventory folder
+    rewrite /new_reagent.php inventory/new_reagent.php
+    rewrite /new_stock.php inventory/new_stock.php
+    rewrite /inv_new_reagent.php inventory/inv_new_reagent.php
+    rewrite /inv_new_stock.php inventory/inv_new_stock.php
+    rewrite /use_stock.php inventory/use_stock.php
+    rewrite /edit_stock.php inventory/edit_stock.php
+    rewrite /edit_lot.php inventory/edit_lot.php
+    rewrite /view_stock.php inventory/view_stock.php
+    rewrite /view_stocks.php inventory/view_stocks.php
+    rewrite /stock_lots.php inventory/stock_lots.php
+
+    ## /barcode folder
+    rewrite /generate_barcode.php barcode/generate_barcode.php
+    rewrite /barcode_lib.php barcode/barcode_lib.php
+    rewrite /export_to_pdf.php barcode/tcpdf/export_to_pdf.php
+    rewrite /print_barcode.php barcode/print_barcode.php
+    rewrite /get_barcode.php barcode/get_barcode.php
+
+    ## /billing folder
+    rewrite /bill_generator.php billing/bill_generator.php
+    rewrite /bill_review.php billing/bill_review.php
+    rewrite /create_new_bill.php billing/create_new_bill.php
+    rewrite /update_discount_for_association.php billing/update_discount_for_association.php
+
+    ## /director folder
+    rewrite /lab_pin.php director/lab_pin.php
+    rewrite /geo_report_dir.php director/geo_report_dir.php
+    rewrite /update_lab_coords.php director/update_lab_coords.php
+
+    ## /bulk_print folder
+    rewrite /print_page.php bulk_print/print_page.php
+    rewrite /report_content.php bulk_print/report_content.php
+    rewrite /print_functions.php bulk_print/print_functions.php
+    rewrite /report_word_content.php bulk_print/report_word_content.php
+
 }
 
