@@ -12,6 +12,7 @@ pub struct PhpFpm {
     // The complete, rendered version of php.ini
     php_ini: String,
     exe_path: String,
+    cfg_dir: String,
     cfg_path: String,
     host: String,
     port: i32,
@@ -28,7 +29,8 @@ impl PhpFpm {
         let curdir = Util::root_directory().unwrap();
         let php_dir = PhpFpm::phpdir().unwrap();
         let exe = php_dir.join("php-cgi.exe");
-        let cfg = curdir.join("run").join("php.ini");
+        let cfg_path = curdir.join("run");
+        let cfg = cfg_path.join("php.ini");
 
         let log_dir = curdir.join("log").into_os_string();
 
@@ -54,6 +56,7 @@ impl PhpFpm {
             proc: None,
             php_ini: rendered_cfg,
             exe_path: String::from(exe.to_str().unwrap()),
+            cfg_dir: String::from(cfg_path.to_str().unwrap()),
             cfg_path: String::from(cfg.to_str().unwrap()),
             // TODO: make these configurable
             host: String::from("127.0.0.1"),
@@ -76,10 +79,14 @@ impl PhpFpm {
             Ok(_) => println!("successfully wrote to {}", self.cfg_path),
         }
 
-        let proc = Command::new(format!(
-            "{} -b {}:{} -c {}",
-            self.exe_path, self.host, self.port, self.cfg_path
-        ))
+        let command = format!(
+            "{} -b {}:{} -c \"{}\"",
+            self.exe_path, self.host, self.port, self.cfg_dir
+        );
+
+        println!("{}", command);
+
+        let proc = Command::new(command)
         .spawn()
         .expect("Failed to launch PHP.");
 

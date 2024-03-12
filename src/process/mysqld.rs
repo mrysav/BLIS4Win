@@ -10,6 +10,7 @@ pub struct Mysqld {
     proc: Option<CreateProcessW::Child>,
     exe_path: String,
     datadir: String,
+    conf: String,
     host: String,
     port: i32,
 }
@@ -21,11 +22,19 @@ impl Mysqld {
         return Ok(mysql);
     }
 
+    fn confdir() -> Result<PathBuf, &'static str> {
+        let curdir = Util::root_directory()?;
+        let mysql = curdir.join("config");
+        return Ok(mysql);
+    }
+
     pub fn new() -> Mysqld {
         let curdir = Util::root_directory().unwrap();
         let mysqld_dir = Mysqld::mysqldir().unwrap();
         let exe = mysqld_dir.join("bin\\mysqld.exe");
         let datadir = mysqld_dir.join("data");
+        let confdir = Mysqld::confdir().unwrap();
+        let conf = confdir.join("my.cnf");
 
         // unused right now...
         let host = String::from("127.0.0.1");
@@ -35,6 +44,7 @@ impl Mysqld {
             proc: None,
             exe_path: String::from(exe.to_str().unwrap()),
             datadir: String::from(datadir.to_str().unwrap()),
+            conf: String::from(conf.to_str().unwrap()),
             // TODO: make these configurable
             host: String::from("127.0.0.1"),
             port: 8112,
@@ -47,8 +57,8 @@ impl Mysqld {
         }
 
         let proc = Command::new(format!(
-            "{} --console --datadir \"{}\"",
-            self.exe_path, self.datadir
+            "{} --defaults-file=\"{}\" --console --datadir=\"{}\"",
+            self.exe_path, self.conf, self.datadir
         ))
         .spawn()
         .expect("Failed to launch Mysqld.");
